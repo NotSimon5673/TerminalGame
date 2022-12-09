@@ -18,6 +18,10 @@ public:
     int Ypos;
     int population;
     string owner;
+
+    string Inspect(int x, int y)
+    {
+    }
 };
 int **biomes;
 int **citymap;
@@ -61,11 +65,10 @@ string **tileCreateLine(unsigned height, unsigned width)
             }
             else
             {
+
                 two_d[h][w] = "    ";
             }
-            std::cout << two_d[h][w];
         }
-        std::cout << "\n";
     }
 
     return two_d;
@@ -200,7 +203,7 @@ string **tileAssignBiome(unsigned height, unsigned width, string **tileMap, int 
     /*
         ATTENTION!
 
-        This function is terrible. Needs optimization
+        This function is kahoot. Needs optimization
 
         Note: instead of using it's position in the map, checks it's value to see if it is euqal to "/‾‾\\"
     */
@@ -208,143 +211,142 @@ string **tileAssignBiome(unsigned height, unsigned width, string **tileMap, int 
     {
         for (int w = 0; w < width; w++)
         {
-            if ((h > 1 && h < 29))
+
+            if (w % 2 == 0)
             {
-                if (biomes[h / 2][w] == 1)
+                if (biomes[h / 2][w] == 1) // is this tile's biome biome 1
                 {
-                    if (w % 2 == 0)
-                    {
-                        map[h][w] = "\033[92m" + map[h][w] + "\033[0m"; // sets the tile color to yellow; indicates desert
 
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[92m" + map[h + 1][w] + "\033[0m";
-                        }
-                    }
-                    else
-                    {
-                        map[h][w] = "\033[92m" + map[h][w] + "\033[0m";
+                    map[h][w] = "\033[92m" + map[h][w] + "\033[0m"; // sets the tile color to green; indicates plains
 
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[92m" + map[h + 1][w] + "\033[0m";
-                        }
-                    }
-                }
-                else if (biomes[h / 2][w] == 2)
-                {
-                    if (w % 2 == 0)
+                    if (map[h][w] == "/‾‾\\")
                     {
-                        map[h][w] = "\033[32m" + map[h][w] + "\033[0m";
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[32m" + map[h + 1][w] + "\033[0m";
-                        }
-                    }
-                    else
-                    {
-                        map[h][w] = "\033[32m" + map[h][w] + "\033[0m";
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[32m" + map[h + 1][w] + "\033[0m";
-                        }
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 1][w] = "\033[92m" + map[h + 1][w] + "\033[0m";
                     }
                 }
 
-                else if (biomes[h / 2][w] == 3)
+                else if (biomes[h / 2][w] == 2) // is this tiles biome biome 2
                 {
-                    if (w % 2 == 0)
+                    map[h][w] = "\033[32m" + map[h][w] + "\033[0m";
+                    if (map[h][w] == "/‾‾\\")
                     {
-                        map[h][w] = "\033[90m" + map[h][w] + "\033[0m";
-                        if (w % 2 != 0)
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[90m" + map[h + 1][w] + "\033[0m";
-                        }
-                    }
-                    else
-                    {
-                        map[h][w] = "\033[90m" + map[h][w] + "\033[0m";
-                        if (w % 2 != 0)
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[90m" + map[h + 1][w] + "\033[0m";
-                        }
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 1][w] = "\033[32m" + map[h + 1][w] + "\033[0m";
                     }
                 }
 
-                else if (biomes[h / 2][w] == 4)
+                else if (biomes[h / 2][w] == 3) // is this tiles biome biome 3
                 {
-                    if (w % 2 == 0)
+
+                    map[h][w] = "\033[90m" + map[h][w] + "\033[0m";
+                    if (map[h][w] == "/‾‾\\")
                     {
-                        map[h][w] = "\033[33m" + map[h][w] + "\033[0m";
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[33m" + map[h + 1][w] + "\033[0m";
-                        }
-                    }
-                    else
-                    {
-                        map[h][w] = "\033[33m" + map[h][w] + "\033[0m";
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[33m" + map[h + 1][w] + "\033[0m";
-                        }
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 1][w] = "\033[90m" + map[h + 1][w] + "\033[0m";
                     }
                 }
 
-                else if (biomes[h / 2][w] == 5)
+                else if (biomes[h / 2][w] == 4) // is this tiles biome biome 4
                 {
-                    if (w % 2 == 0)
+
+                    map[h][w] = "\033[33m" + map[h][w] + "\033[0m";
+                    if (map[h][w] == "/‾‾\\")
                     {
-                        map[h][w] = "\033[1;37m" + map[h][w] + "\033[0m";
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[1;37m" + map[h + 1][w] + "\033[0m";
-                        }
-                    }
-                    else
-                    {
-                        map[h][w] = "\033[1;37m" + map[h][w] + "\033[0m";
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[1;37m" + map[h + 1][w] + "\033[0m";
-                        }
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 1][w] = "\033[33m" + map[h + 1][w] + "\033[0m";
                     }
                 }
 
-                else if (biomes[h / 2][w] == 6)
+                else if (biomes[h / 2][w] == 5) // is this tiles biome biome 5
                 {
-                    if (w % 2 == 0)
+
+                    map[h][w] = "\033[1;37m" + map[h][w] + "\033[0m";
+                    if (map[h][w] == "/‾‾\\")
                     {
-                        map[h][w] = "\033[1;34m" + map[h][w] + "\033[0m";
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[1;34m" + map[h + 1][w] + "\033[0m";
-                        }
-                    }
-                    else
-                    {
-                        map[h][w] = "\033[1;34m" + map[h][w] + "\033[0m";
-                        if ((h % 2 == 0 && w % 2 == 0) || (h % 2 != 0 && w % 2 != 0))
-                        {
-                            // checks if the tile is top or bottom and if it's top, color the tile below
-                            map[h + 1][w] = "\033[1;34m" + map[h + 1][w] + "\033[0m";
-                        }
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 1][w] = "\033[1;37m" + map[h + 1][w] + "\033[0m";
                     }
                 }
 
-                std::cout << map[h][w];
+                else if (biomes[h / 2][w] == 6) // is this tiles biome biome 6
+                {
+                    map[h][w] = "\033[1;34m" + map[h][w] + "\033[0m";
+                    if (map[h][w] == "/‾‾\\")
+                    {
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 1][w] = "\033[1;34m" + map[h + 1][w] + "\033[0m";
+                    }
+                }
             }
+            else if (h < 28)
+            {
+                if (biomes[h / 2][w] == 1) // is this tile's biome biome 1
+                {
+
+                    map[h + 1][w] = "\033[92m" + map[h + 1][w] + "\033[0m"; // sets the tile color to green; indicates plains
+
+                    if (map[h + 1][w] == "/‾‾\\")
+                    {
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 2][w] = "\033[92m" + map[h + 2][w] + "\033[0m";
+                    }
+                }
+
+                else if (biomes[h / 2][w] == 2) // is this tiles biome biome 2
+                {
+                    map[h + 1][w] = "\033[32m" + map[h + 1][w] + "\033[0m";
+                    if (map[h + 1][w] == "/‾‾\\")
+                    {
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 2][w] = "\033[32m" + map[h + 2][w] + "\033[0m";
+                    }
+                }
+
+                else if (biomes[h / 2][w] == 3) // is this tiles biome biome 3
+                {
+
+                    map[h + 1][w] = "\033[90m" + map[h + 1][w] + "\033[0m";
+                    if (map[h + 1][w] == "/‾‾\\")
+                    {
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 2][w] = "\033[90m" + map[h + 2][w] + "\033[0m";
+                    }
+                }
+
+                else if (biomes[h / 2][w] == 4) // is this tiles biome biome 4
+                {
+
+                    map[h + 1][w] = "\033[33m" + map[h + 1][w] + "\033[0m";
+                    if (map[h + 1][w] == "/‾‾\\")
+                    {
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 2][w] = "\033[33m" + map[h + 2][w] + "\033[0m";
+                    }
+                }
+
+                else if (biomes[h / 2][w] == 5) // is this tiles biome biome 5
+                {
+
+                    map[h + 1][w] = "\033[1;37m" + map[h + 1][w] + "\033[0m";
+                    if (map[h + 1][w] == "/‾‾\\")
+                    {
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 2][w] = "\033[1;37m" + map[h + 2][w] + "\033[0m";
+                    }
+                }
+
+                else if (biomes[h / 2][w] == 6) // is this tiles biome biome 6
+                {
+                    map[h + 1][w] = "\033[1;34m" + map[h + 1][w] + "\033[0m";
+                    if (map[h + 1][w] == "/‾‾\\")
+                    {
+                        // checks if the tile is top or bottom and if it's top, color the tile below
+                        map[h + 2][w] = "\033[1;34m" + map[h + 2][w] + "\033[0m";
+                    }
+                }
+            }
+            std::cout << map[h][w];
         }
         std::cout << std::endl;
     }
@@ -375,11 +377,13 @@ int **cityGenerator(unsigned height, unsigned width)
 
 int **Load()
 {
-    string myText;
+    string Bmap;
+    string Cmap;
     int **biomeMap = 0;
 
     // Read from the text file
-    std::ifstream infile("saves/biomeMap.msf");
+    std::ifstream Bfile("saves/biomeMap.msf");
+    std::ifstream Cfile("saves/citiesMap.msf");
     int startGame();
     biomeMap = new int *[15];
     // Use a while loop together with the getline() function to read the file line by line
@@ -392,16 +396,18 @@ int **Load()
 
         for (int w = 0; w < 31; w++)
         {
-            getline(infile, myText);
+            getline(Bfile, Bmap);
+            getline(Cfile, Cmap);
+
             // Print current character
-            biomeMap[h][w] = stoi(myText);
+            biomeMap[h][w] = stoi(Bmap);
             biomes = biomeMap;
+            Bfile.close();
+            Cfile.close();
+            citymap[h][w] = stoi(Cmap);
             std::cout << biomeMap[h][w] << endl;
         }
     }
-
-    // Close the file
-    infile.close();
 
     int start = startGame();
     return biomeMap;

@@ -32,7 +32,7 @@ namespace cmds
         int save(int **biomeMap, int **citiesMap)
         {
             ofstream outfile("saves/biomeMap.msf");
-            // ofstream file("CoN/saves/citiesMap.msf");
+            ofstream file("saves/citiesMap.msf");
 
             // outfile.open("saves/biomeMap.msf", std::ios::trunc);
             //  file.open("CoN/saves/citiesMap.msf", std::ios::trunc);
@@ -42,12 +42,12 @@ namespace cmds
                 {
                     outfile << biomeMap[i][j];
                     outfile << "\n";
-                    // file << citiesMap[i][j] << endl;
+                    file << citiesMap[i][j] << endl;
                 }
             }
 
             outfile.close();
-            // file.close();
+            file.close();
             std::cout << "Game Saved" << endl;
             cin >> scree;
             return 0;

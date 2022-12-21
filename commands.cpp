@@ -28,7 +28,6 @@ namespace cmds
             return command;
         }
         // string help(command) {}
-        // string inspect(tile) {}
         int save(int **biomeMap, int **citiesMap)
         {
             ofstream outfile("saves/biomeMap.msf");

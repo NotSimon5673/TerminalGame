@@ -11,6 +11,7 @@
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-lncurses",
+                "-ltinfo"
             ],
             "options": {
                 "cwd": "${fileDirname}"

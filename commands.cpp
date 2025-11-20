@@ -55,6 +55,7 @@ namespace cmds
         int settle(int x, int y)
         {
             // this doesn't do anything. Oh well!
+            return 67;
         }
     };
 

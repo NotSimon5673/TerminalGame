@@ -1,22 +1,29 @@
 
 #include <iostream>
 #include <fstream>
+#include <thread>
+#include <chrono>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
 #include "menuCommands.hpp"
 #include "gameCommands.hpp"
 #include "commands.cpp"
+#include "tiling.cpp"
 using namespace std;
 using namespace cmds;
+using namespace tiling;
 
 int play()
 {
     using cmds::Gamecommands;
+
+    
     while (true)
     {
+        string **BiomeMap;
         // clear the screen and then print out the grid
-        system("clear");
+        //system("clear");
         for (int i = 0; i > 15; i++)
         {
             for (int j = 0; j > 31; j++)
@@ -149,7 +156,8 @@ string menu()
         {
             // if the user types a non valid command, Display the invalid command meassage and wait for the user to press any button
             std::cout << "NOT A VALID COMMAND" << std::endl;
-            char ch = getch();
+            char temp = getchar(); //because the enter key is used to submit the command via cin, this will detect that as a char input and get skipped.
+            char ch = getchar(); // I could try to find a better solution but why even bother. calling this function twice works perfectly fine
             cout << ch << endl;
         }
     }
@@ -167,7 +175,7 @@ string inspect(int x, int y)
     cout << "Tile info:" << endl;
     cout << "Biome: " + tilemap[x][y].Biome << endl;
     cout << "City info:" << endl;
-    cout << "population:" + tilemap[x][y].tileCity.population << endl;
+    //cout << "population:" + tilemap[x][y].tileCity.population << endl;             Deprecated. Not worth putting any effort into making a temp quickfix for this
     return "";
 }
 

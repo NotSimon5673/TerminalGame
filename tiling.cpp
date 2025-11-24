@@ -1,9 +1,33 @@
 #include <list>
 #include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <tuple>
+#include <random>
 using namespace std;
 
 namespace tiling
 {
+
+
+    //move these somewhere else and call them externally
+
+    struct Cube {
+        int x, y, z;
+
+        bool operator==(const Cube& other) const {
+            return x == other.x && y == other.y && z == other.z;
+        }       
+    };
+
+    struct CubeHash {
+        size_t operator()(const Cube& c) const {
+        return ((size_t)c.x * 73856093) ^
+                ((size_t)c.y * 19349663) ^
+                ((size_t)c.z * 83492791);
+        }
+    };
+
     class City
     {
     public:
@@ -19,15 +43,17 @@ namespace tiling
         // attributes
         string tileTop = "/‾‾\\";
         string tileBottom = "\\__/";
-        int Biome;
+        int Biome = 1;
         int X;
         int Y;
+        int Z;
         // methods
         string tileInspect;
     };
 
-    class gameSpace
+    class boardManager
     {
+   
     public:
         //This game uses a hexagonal array to store info since the grid is hexagonal. The array is controlled by three variables X, Y, and Z.
         
@@ -39,18 +65,40 @@ namespace tiling
 
         //For example: Let's say you start at position 0,0,0 of the array (center), moving to a position where x = 1 will require either Y or Z to be -1. As you have 
         // probably already figured, this means that there are two different tiles where x = : [1,-1,0] & [1,0,-1]
+       
+        int mapSize;
+
+        unordered_map<struct Cube,Tile, struct CubeHash> board = makeBoard();
+
+        unordered_map<struct Cube,Tile, struct CubeHash> makeBoard(){
+            
+            //Create H-Array
+
+            unordered_map<Cube, Tile, CubeHash> Tilemap;
+
+            //assign Tiles to Valid spaces
+            
+            for ( int x = -mapSize; x < mapSize; x++) {   //create x to start at -X, and end at X
+                for ( int y = -mapSize; y < mapSize; y++) { //create x to start at -X, and end at X
+                    for ( int z = -mapSize; z < mapSize; z++) { //create x to start at -X, and end at X
+                        if((x+y+z) == 0){ //checks to make sure that coordinate point is valid on an H-array *SEE COMMENT AT CLASS DECLARATION*
+                            Tile tile;
+                            tile.X = x;
+                            tile.Y = y;
+                            tile.Z = z;
+                            Tilemap[{x,y,z}] = tile;
+                        };
+                    };
+                };
+            };
+
+            //Assign Biomes
+
+            //Generate Cities
+
+            return Tilemap;
+        }
         
-
-        int X;
-        int Y;
-        int Z;
-        /*
-        
-        Stuff goes here
-
-        */
-
-
         
     };
 
@@ -70,7 +118,7 @@ namespace tiling
             {
                 two_d[h][w];
                 two_d[h][w].X = h;
-                two_d[h][w].Y = w;
+                two_d[h][w].Y = w; 
             }
         }
 

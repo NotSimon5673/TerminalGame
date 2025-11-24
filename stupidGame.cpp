@@ -152,6 +152,16 @@ string menu()
         {
             int **bioome = Load();
         }
+        else if (input == "test")
+        {
+            boardManager testManager;
+            testManager.mapSize = 4;
+            cout << testManager.board[{-1,3,-2}].tileBottom;
+
+            char temp = getchar();
+            char ch = getchar(); // I could try to find a better solution but why even bother. calling this function twice works perfectly fine
+            cout << ch << endl;
+        }
         else
         {
             // if the user types a non valid command, Display the invalid command meassage and wait for the user to press any button

@@ -9,6 +9,7 @@
 #include "menuCommands.hpp"
 #include "gameCommands.hpp"
 #include "commands.cpp"
+#include "tiling.h"
 #include "tiling.cpp"
 using namespace std;
 using namespace cmds;
@@ -41,7 +42,7 @@ int play()
 
         if (command == "save")
         {
-            cmd.save(biomes, citymap);
+            //cmd.save(biomes, citymap);
         }
 
         if (command == "settle")
@@ -56,7 +57,7 @@ int play()
             myCity.Xpos = X;
             myCity.Ypos = Y;
             citymap[X][Y] = 1;
-            cities.assign(1, myCity);
+            //cities.assign(1, myCity);
         }
 
         if (command == "inspect")
@@ -78,7 +79,7 @@ int startGame()
 
     // map is made 14x31
 
-    string **map = tileAssignBiome(29, 31, biomes); // uses the biomeMap and the tile objects to create a grid with biomes attached to them and then print it which ended up being A LOT harder than it sounds.
+    //string **map = tileAssignBiome(29, 31, biomes); // uses the biomeMap and the tile objects to create a grid with biomes attached to them and then print it which ended up being A LOT harder than it sounds.
     int game = play();
     return 0;
 }
@@ -112,7 +113,7 @@ int **Load()
 
             // Print current character
             biomeMap[h][w] = stoi(Bmap);
-            biomes = biomeMap;
+            //biomes = biomeMap;
             Bfile.close();
             Cfile.close();
             citymap[h][w] = stoi(Cmap);
@@ -126,9 +127,10 @@ int **Load()
 
 int newGame()
 {
+    
     map = tileCreate(29, 31);         // initialize a 'map' containing many tile objects
     tilemap = tileCreateLine(15, 31); // initialize the 2d array used for the tileassignbiome function
-    biomes = biomeGenerator(15, 31);  // creates a 2d array of biomes based on weighted randomness
+    //biomes = biomeGenerator(15, 31);// creates a 2d array of biomes based on weighted randomness
     citymap = cityGenerator(15, 31);  // creates a 2d array where every value is 0
     int start = startGame();
     return 0;
@@ -154,10 +156,12 @@ string menu()
         }
         else if (input == "test")
         {
-            boardManager testManager;
-            testManager.mapSize = 4;
-            cout << testManager.board[{-1,3,-2}].tileBottom;
+            system("clear");
+            boardManager testManager(3);
 
+            //cout << testManager.board[{3,0,-3}].tileTop.length()<< endl;
+            testManager.assignBiome();
+            testManager.displayTUI();
             char temp = getchar();
             char ch = getchar(); // I could try to find a better solution but why even bother. calling this function twice works perfectly fine
             cout << ch << endl;

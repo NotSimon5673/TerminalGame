@@ -1,14 +1,13 @@
 #include <fstream>
 #include <iostream>
-#include "menuCommands.hpp"
-#include "gameCommands.hpp"
+#include "commands.h"
 
 #ifndef COMMANDS_HPP
 #define COMMANDS_HPP
 
 using namespace std;
 
-namespace cmds
+namespace Cmds
 {
     class menuCommands
     {

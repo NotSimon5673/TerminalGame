@@ -71,9 +71,11 @@ namespace tiling
 
         void displayTUI();
 
-        int shuffle();
+        int shuffle(int x, int y);
 
         size_t displayWidth(const std::string& s);
+
+        Cube Zf(int x, int y);
         
     private:
         

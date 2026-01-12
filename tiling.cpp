@@ -36,32 +36,28 @@ namespace tiling{
         
         //assign Tiles to Valid spaces
 
-        for ( int x = -mapSize; x < mapSize + 1; x++) {   //create x to start at -X, and end at X""
-            for ( int y = -mapSize; y < mapSize + 1; y++) { //create x to start at -X, and end at X
-                for ( int z = -mapSize; z < mapSize + 1; z++) { //create x to start at -X, and end at X
-                    if((x+y+z) == 0){ //checks to make sure that coordinate point is valid on an H-array *SEE COMMENT AT CLASS DECLARATION*
-                        Tile tile;
-                        tile.X = x;
-                        tile.Y = y;
-                        tile.Z = z;
-                        Tilemap[{x,y,z}] = tile;
-                    };
+        for ( int x = -mapSize; x <= mapSize; x++) {   //create x to start at -mapSize, and end at mapSize
+            for ( int y = max(-mapSize, -mapSize - x); (y <= (mapSize - x)) && (y <= mapSize); y++) { //create y to start at -mapSize, and end at mapSize - x(the maximum value y can be on a given tile)
+                Tile tile;
+                tile.X = x;
+                tile.Y = y;
+                Tilemap[Zf(x,y)] = tile;
+                    
+            }
+        }
 
-                };
-            };
-        };
 
 
         return Tilemap;
     }
     
     void boardManager::assignBiome(){
-        
-        
         //add water base tile      
 
         board[{mapSize,-mapSize, 0}].Biome = 6; //currently always spawns at the leftmost point of the map
         board[{mapSize,-mapSize, 0}].colorMod = "\033[1;34m";
+        board[{mapSize,-mapSize, 0}].tileTMid =  "/ ~~~   \\";
+        board[{mapSize,-mapSize, 0}].tileBMid = "\\   ~~~ /";
         
         //add desert tiles and snow tiles 
         
@@ -73,10 +69,89 @@ namespace tiling{
             else if (cube.z == -mapSize){
                 tile.Biome = 5;                        //add snow tiles
                 tile.colorMod = "\033[1;37m";
+                tile.tileTMid =  "/  *  * \\";
+                tile.tileBMid = "\\   *   /";
             }
-        }
+        };
         //add forest tiles
+
+
+
+        int forestExpansion = 2; //temp variable remove later
+
+        while(2 == 2){
+            int x = shuffle(-mapSize,mapSize);
+            int y = shuffle(max(-mapSize, -mapSize - x), min( mapSize,  mapSize - x));//something wrong, fix?
+
+            Cube randomCube = Zf(x,y);
+
+
+
+            auto jt = board.find(randomCube);
+            if (jt != board.end()) {
+                if(board.at(randomCube).Biome != 1){continue;}
+
+                auto &value = jt->second;
+            } 
+            
+            for(int i = -forestExpansion; i < forestExpansion +1 ; i++){
+                for(int j = -forestExpansion; j < forestExpansion +1; j++){
+
+                    Cube tempCube = Zf(x + i, y + j);
+
+                    auto it = board.find(tempCube);
+                    if (it != board.end()) {
+
+                        if(board.at(tempCube).Biome == 1){
+
+                            if ((i != j) || i == 0){
+                                board[tempCube].Biome = 2;
+                                board[tempCube].colorMod = "\033[32m";
+                                board[tempCube].tileTMid =  "/⋏  ⋏ ⋏ \\";
+                                board[tempCube].tileBMid = "\\ ⋏  ⋏  /";
+                            }
+                        }
+
+                        auto &value = it->second;
+                    } 
+                }
+            }
+            
+            break;
+        }
+
+
+        while(2 == 2){
+            int x = shuffle(-mapSize,mapSize);
+    
+            for ( int y = max(-mapSize, -mapSize - x); (y <= (mapSize - x)) && (y <= mapSize); y++){
+
+                Cube mountCube = Zf(x,y);
+
+                auto jt = board.find(mountCube);
+                if (jt != board.end()) {
+                    if(board.at(mountCube).Biome != 1){continue;}
+
+                    auto &value = jt->second;
+                } 
+
+                if((board.at(mountCube).Biome == 1) || (board.at(mountCube).Biome == 2)){
+                    
+                    board[mountCube].Biome = 3;
+                    board[mountCube].colorMod = "\033[90m";
+                    board[mountCube].tileTMid =  "/  ⋀  ⋀ \\";
+                    board[mountCube].tileBMid = "\\ / \\へ\\/";
+                    
+                }
         
+            }
+            break;
+        }
+
+        
+
+
+
         //add mountain tiles
         
     };
@@ -99,24 +174,25 @@ namespace tiling{
             if(cube.y % 2 == 0){
                 
 
-
+                
                 //NOTE: using x relativity means that the x positions actually come out to X.5 for the in between tiles, use this to combine all of this into one efficient system
 
                 //NOTE: make sub-function which uses X value to determine weather the string should be appended to the front or back 
 
                 int Xrelative = cube.x + (cube.y/2);                    //maybe integrate into function 
                 //starts at 0 on the top
+        
                 map[4 * (mapSize - Xrelative)][mapSize + cube.y].append(tile.tileTop);
                 map[4 * (mapSize - Xrelative) + 1][mapSize + cube.y].append(tile.tileTMid);   //brutes forces strings into columns becasue I'm too lazy to make well designed code and it works 
                 map[4 * (mapSize - Xrelative) + 2][mapSize + cube.y].append(tile.tileBMid);
                 map[4 * (mapSize - Xrelative) + 3][mapSize + cube.y].append(tile.tileBottom); 
+                
 
-               // cout << to_string(cube.x) + "," + to_string(cube.y) + "," + to_string(cube.z);
-               // cout << "\n";
             } else {
                 float yfloat = cube.y;
                 float Xrelative = cube.x + (yfloat/2) -0.25;                    //maybe integrate into function 
                 //starts at 0 on the top
+                
                 if ((4 * (mapSize - Xrelative) - 1) > 0){
                     map[(4 * (mapSize - Xrelative) - 1)][mapSize + cube.y].append(tile.tileTop);
                     map[(4 * (mapSize - Xrelative)    )][mapSize + cube.y].append(tile.tileTMid);
@@ -124,7 +200,7 @@ namespace tiling{
                     map[(4 * (mapSize - Xrelative) + 2)][mapSize + cube.y].append(tile.tileBottom); 
                 }
                 else cout << Xrelative;
-
+            
 
             }
         }
@@ -155,24 +231,23 @@ namespace tiling{
             s = std::string(left, ' ') + s + std::string(right, ' ');
         }
 
-       // cout << map.size();
+    // cout << map.size();
         for (auto&string: MMap){
             cout << string;
             cout << "\n";
         }
 
-            
-
+    
     };
 
-    int shuffle(int x, int y) { //probably should go somewhere else or be integrated into assignBiome but idk
+    int boardManager::shuffle(int x, int y) { //probably should go somewhere else or be integrated into assignBiome but idk
         static std::random_device rd; //random seed
         static std::mt19937 gen(rd());
         static std::uniform_int_distribution<> dist(x, y);
 
         return dist(gen);
     };
-    
+      
     //returns the length of a string without assigning multiple characters to mutli-byte characters
     size_t boardManager::displayWidth(const std::string& s) {                  
         size_t len = 0;
@@ -215,256 +290,16 @@ namespace tiling{
         return len;
     }
     
+    /*
+    short for Zfuck.
 
+    Fuck you, Z!
+    */
+    Cube boardManager::Zf(int x, int y){
 
+        int z = -(x + y);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    Tile **tileCreateLine(unsigned height, unsigned width)
-    {
-        Tile **two_d = 0;
-        string tileCreate(bool);
-        two_d = new Tile *[height];
-        bool alt = false;
-
-        for (int h = 0; h < height; h++)
-        {
-            two_d[h] = new Tile[width];
-            for (int w = 0; w < width; w++)
-            {
-                two_d[h][w];
-                two_d[h][w].X = h;
-                two_d[h][w].Y = w; 
-            }
-        }
-
-        return two_d;
+        return  {x,y,z};
     }
 
-
-    string **tileAssignBiome(unsigned height, unsigned width, int **biomes)
-    {
-        string tileCreate(bool);
-        for (int h = 0; h < height; h++)
-        {
-            for (int w = 0; w < width; w++)
-            {
-
-                if ((h % 2 == 0) && (w % 2 == 0) && h < 28)
-                {
-                    switch (tilemap[h / 2][w].Biome)
-                    {
-                    case 1: // if the tile's biome is set to 1 set the tile to plains
-                        map[h][w] = "\033[92m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 1][w] = "\033[92m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-
-                    case 2: // if the tile's biome is set to 2 set the tile to forest
-                        map[h][w] = "\033[32m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 1][w] = "\033[32m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-
-                    case 3: // if the tile's biome is set to 3 set the tile to mountains
-
-                        map[h][w] = "\033[90m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 1][w] = "\033[90m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-
-                    case 4: // if the tile's biome is set to 4 set the tile to desert
-                        map[h][w] = "\033[33m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 1][w] = "\033[33m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-
-                    case 5: // if the tile's biome is set to  5 set the tile to snow
-                        map[h][w] = "\033[1;37m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 1][w] = "\033[1;37m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-
-                    case 6: // if the tile's biome is set to 6 set the tile to water
-                        map[h][w] = "\033[1;34m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 1][w] = "\033[1;34m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-                    }
-                }
-                else if ((h % 2 == 0) && (w % 2 != 0) && h < 27)
-                {
-                    switch (tilemap[h / 2][w].Biome)
-                    {
-                    case 1:
-                        map[h + 1][w] = "\033[92m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 2][w] = "\033[92m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-
-                    case 2:
-                        map[h + 1][w] = "\033[32m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 2][w] = "\033[32m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-
-                        break;
-
-                    case 3:
-
-                        map[h + 1][w] = "\033[90m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 2][w] = "\033[90m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-
-                    case 4:
-                        map[h + 1][w] = "\033[33m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 2][w] = "\033[33m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-
-                    case 5:
-                        map[h + 1][w] = "\033[1;37m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 2][w] = "\033[1;37m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-
-                    case 6:
-                        map[h + 1][w] = "\033[1;34m" + tilemap[h / 2][w].tileTop + "\033[0m";
-                        map[h + 2][w] = "\033[1;34m" + tilemap[h / 2][w].tileBottom + "\033[0m";
-                        break;
-                    }
-                }
-                if (((w % 2 != 0) && (h == 0)) || ((w % 2 == 0) && (h == 28)))
-                {
-                    map[h][w] = "    ";
-                }
-                std::cout << map[h][w];
-            }
-            std::cout << std::endl;
-        }
-        std::cout << "\n";
-        return map;
-    }
-
-    int **cityGenerator(unsigned height, unsigned width)
-    {
-        int poonta = 0;
-        int **two_d = 0;
-        two_d = new int *[height];
-        bool alt = false;
-
-        for (int h = 0; h < height; h++)
-        {
-            two_d[h] = new int[width];
-
-            for (int w = 0; w < width; w++)
-            {
-                two_d[h][w] = poonta;
-            }
-            std::cout << "\n";
-        }
-
-        return two_d;
-    }
-
-    string **tileCreate(unsigned height, unsigned width)
-{
-
-
-    string **map = 0;
-
-
-    map = new string *[height];
-
-
-
-
-
-    for (int h = 0; h < height; h++)
-
-    {
-
-
-        map[h] = new string[width];
-
-
-        for (int w = 0; w < width; w++)
-
-
-        {
-
-
-            map[h][w] = "";
-        }
-
-    }
-    return map;
-}
 }
